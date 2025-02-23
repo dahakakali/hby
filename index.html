@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Happy Birthday Celebration</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- style.css (Optional External) -->
+  <link rel="stylesheet" href="./style.css" />
+
+  <style>
+    /* Animated Gradient Text */
+    .gradient-text {
+      font-size: 3rem;
+      font-weight: bold;
+      background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff);
+      background-size: 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientMove 4s infinite linear;
+    }
+    @keyframes gradientMove {
+      0% { background-position: 0%; }
+      100% { background-position: 100%; }
+    }
+
+    /* Star Canvas covers entire background */
+    #starCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Popup Modal & Overlay */
+    .modal, .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80%;
+      max-width: 400px;
+      background: white;
+      color: black;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      z-index: 100;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 99;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -55%); }
+      to { opacity: 1; transform: translate(-50%, -50%); }
+    }
+
+    /* Flip Card Styles */
+    .flip-card {
+      perspective: 1000px;
+      width: 200px;
+      height: 250px;
+      margin: 0 auto; /* Center each card horizontally in its grid cell */
+    }
+    .flip-card-inner {
+      width: 100%;
+      height: 100%;
+      transition: transform 0.8s;
+      transform-style: preserve-3d;
+      position: relative;
+    }
+    .flip-card.flipped .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+    .flip-card-front, .flip-card-back {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      backface-visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      padding: 10px;
+      font-size: 1rem;
+    }
+    /* Different background images for each flip-card FRONT */
+    .flip-card-front {
+      color: white;
+      background-size: cover;
+      background-position: center;
+    }
+    .card1-front {
+      background-image: url('./img15.jpeg'); /* Replace with your image path */
+    }
+    .card2-front {
+      background-image: url('./img12.jpg'); /* Replace with your image path */
+    }
+    .card3-front {
+      background-image: url('./img13.jpeg'); /* Replace with your image path */
+    }
+    /* Keep the gradient for the BACK */
+    .flip-card-back {
+      background: linear-gradient(135deg, #06beb6, #48b1bf);
+      color: white;
+      transform: rotateY(180deg);
+    }
+  </style>
+</head>
+<body class="relative min-h-screen bg-gray-900 text-white">
+
+  <!-- Star Shower Canvas -->
+  <canvas id="starCanvas"></canvas>
+
+  <!-- Main Container -->
+  <div class="relative z-10 flex flex-col items-center justify-center min-h-screen text-center p-4">
+
+    <!-- Title & Subtitle Card -->
+    <div class="w-full max-w-3xl bg-white text-gray-900 rounded-lg shadow-lg p-6">
+      <h1 class="gradient-text">Happy Birthday!</h1>
+      <!-- The button that triggers the popup -->
+      <button
+        id="showPopup"
+        class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Click for a Surprise Message! 🎉
+      </button>
+    </div>
+
+    <!-- Responsive Iframe -->
+    <div class="w-full max-w-4xl mt-6">
+      <iframe src="./photo.html" class="w-full aspect-video rounded-lg shadow-lg" frameborder="0"></iframe>
+    </div>
+
+    <!-- Flip Cards Container -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8">
+      <!-- Flip Card 1 -->
+      <div class="flip-card cursor-pointer">
+        <div class="flip-card-inner">
+          <div class="flip-card-front card1-front">
+            🎁 Tap for a Surprise!
+          </div>
+          <div class="flip-card-back">
+            ✨ "May your day be filled with endless joy and laughter!" 🎉
+          </div>
+        </div>
+      </div>
+
+      <!-- Flip Card 2 -->
+      <div class="flip-card cursor-pointer">
+        <div class="flip-card-inner">
+          <div class="flip-card-front card2-front">
+            🎂 Click to Reveal!
+          </div>
+          <div class="flip-card-back">
+            💖 "Wishing you love, happiness, and all your heart desires!" 💫
+          </div>
+        </div>
+      </div>
+
+      <!-- Flip Card 3 -->
+      <div class="flip-card cursor-pointer">
+        <div class="flip-card-inner">
+          <div class="flip-card-front card3-front">
+            🎊 Open for Magic!
+          </div>
+          <div class="flip-card-back">
+            🌟 "Another year of being awesome! Stay blessed & keep shining!" 🌈
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> <!-- End Main Container -->
+ <iframe class="w-full aspect-video rounded-lg shadow-lg" src="./slideshow.html" frameborder="2"></iframe>
+  <!-- Popup Modal & Overlay -->
+  <div id="modalOverlay" class="modal-overlay"></div>
+  <div id="poetryModal" class="modal">
+    <h2 class="text-2xl font-bold mb-4">A Birthday Wish for You! 🎂</h2>
+    <p class="text-lg italic">
+      "May your day be filled with love and cheer, <br/>
+      Laughter, joy, and friends so dear. <br/>
+      May your dreams take flight and shine so bright, <br/>
+      With happiness glowing all through the night!"
+    </p>
+    <button id="closeModal" class="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+      Close
+    </button>
+  </div>
+
+  <script>
+    //=============================================
+    // 1) STAR SHOWER ANIMATION
+    //=============================================
+    const canvas = document.getElementById('starCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let stars = [];
+    function createStars() {
+      stars = [];
+      for (let i = 0; i < 100; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          size: Math.random() * 2 + 1,
+          speed: Math.random() * 2 + 1
+        });
+      }
+    }
+    function animateStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      stars.forEach(star => {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+        ctx.fillStyle = 'white';
+        ctx.fill();
+        star.y -= star.speed;
+        if (star.y < 0) {
+          star.y = canvas.height;
+          star.x = Math.random() * canvas.width;
+        }
+      });
+      requestAnimationFrame(animateStars);
+    }
+    createStars();
+    animateStars();
+
+    // Resize star canvas on window resize
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      createStars();
+    });
+
+    //=============================================
+    // 2) FLIP CARDS
+    //=============================================
+    document.querySelectorAll('.flip-card').forEach(card => {
+      card.addEventListener('click', (event) => {
+        event.stopPropagation();
+        card.classList.toggle('flipped');
+      });
+    });
+
+    //=============================================
+    // 3) POPUP MODAL
+    //=============================================
+    const showPopupBtn = document.getElementById('showPopup');
+    const modal = document.getElementById('poetryModal');
+    const overlay = document.getElementById('modalOverlay');
+    const closeModalBtn = document.getElementById('closeModal');
+
+    // Open modal on button click
+    showPopupBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      modal.style.display = "block";
+      overlay.style.display = "block";
+    });
+
+    // Close modal on button click
+    closeModalBtn.addEventListener("click", (event) => {
+      event.stopPropagation();
+      modal.style.display = "none";
+      overlay.style.display = "none";
+    });
+
+    // Close modal when clicking outside it (on the overlay)
+    overlay.addEventListener("click", () => {
+      modal.style.display = "none";
+      overlay.style.display = "none";
+    });
+  </script>
+</body>
+</html>

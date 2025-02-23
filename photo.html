@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Celebration 🎉</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: #121212;
+            color: white;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            margin: 0;
+        }
+
+        /* Slideshow Container */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: 350px;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0px 8px 16px rgba(255, 255, 255, 0.2);
+        }
+
+        .carousel-slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: transform 1s ease-in-out, opacity 1s ease-in-out;
+        }
+
+        /* Star Shower */
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <!-- Auto Sliding Image Container -->
+    <div class="carousel-container">
+        <canvas id="starCanvas"></canvas>
+        <div class="carousel-slide" id="slide1" style="background-image: url('./img1.jpg');"></div>
+        <div class="carousel-slide" id="slide2" style="background-image: url('./img2.jpg');"></div>
+        <div class="carousel-slide" id="slide3" style="background-image: url('./img3.jpg');"></div>
+        <div class="carousel-slide" id="slide4" style="background-image: url('./img4.jpg');"></div>
+        <div class="carousel-slide" id="slide5" style="background-image: url('./img5.jpg');"></div>
+    </div>
+
+    <script>
+        // Sliding Animations
+        const animations = [
+            { transform: "translateX(100%)", opacity: "0" },  // Slide from right
+            { transform: "translateX(-100%)", opacity: "0" }, // Slide from left
+            { transform: "translateY(-100%)", opacity: "0" }, // Slide from top
+            { transform: "translateY(100%)", opacity: "0" }   // Slide from bottom
+        ];
+
+        let currentIndex = 0;
+        const slides = document.querySelectorAll(".carousel-slide");
+
+        function changeSlide() {
+            slides.forEach(slide => {
+                slide.style.opacity = "0";
+                slide.style.transform = "none";
+            });
+
+            let randomAnimation = animations[Math.floor(Math.random() * animations.length)];
+
+            slides[currentIndex].style.opacity = "1";
+            slides[currentIndex].style.transform = "none";
+            slides[currentIndex].animate([
+                randomAnimation,
+                { transform: "translateX(0)", opacity: "1" }
+            ], { duration: 1000, easing: "ease-in-out" });
+
+            currentIndex = (currentIndex + 1) % slides.length;
+        }
+
+        setInterval(changeSlide, 8000); // 8 seconds per slide
+        changeSlide();
+
+        // Star Shower Animation (Continuous)
+        const starCanvas = document.getElementById("starCanvas");
+        const ctx = starCanvas.getContext("2d");
+        starCanvas.width = window.innerWidth;
+        starCanvas.height = window.innerHeight;
+
+        let stars = [];
+
+        function createStars() {
+            for (let i = 0; i < 100; i++) {
+                stars.push({
+                    x: Math.random() * starCanvas.width,
+                    y: Math.random() * starCanvas.height,
+                    size: Math.random() * 3 + 1,
+                    speed: Math.random() * 2 + 1
+                });
+            }
+        }
+
+        function animateStars() {
+            ctx.clearRect(0, 0, starCanvas.width, starCanvas.height);
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                ctx.fillStyle = "white";
+                ctx.fill();
+                star.y += star.speed;  // Falling effect
+                if (star.y > starCanvas.height) {
+                    star.y = 0;  // Reset to top when reaching bottom
+                    star.x = Math.random() * starCanvas.width;
+                }
+            });
+            requestAnimationFrame(animateStars);
+        }
+
+        // Start star shower continuously
+        createStars();
+        animateStars();
+
+        // Resize canvas on window resize
+        window.addEventListener("resize", () => {
+            starCanvas.width = window.innerWidth;
+            starCanvas.height = window.innerHeight;
+            createStars();
+        });
+
+    </script>
+
+</body>
+</html>
