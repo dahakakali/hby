@@ -1,29 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Are You Sure?</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="flex items-center justify-center h-screen bg-gray-900 text-white">
-    
-    <div class="text-center">
-        <button id="startBtn" class="bg-blue-500 px-6 py-3 rounded-lg text-lg font-bold hover:bg-blue-600">Are you sure you want to know?</button>
-    </div>
-
-    <div id="popup" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-        <div class="bg-white text-black p-6 rounded-lg shadow-lg text-center">
-            <p id="popupText" class="text-lg font-bold">Are you sure you want to know?</p>
-            <div class="mt-4 space-x-4">
-                <button id="yesBtn" class="bg-green-500 px-4 py-2 rounded-lg hover:bg-green-600">Yes</button>
-                <button id="noBtn" class="bg-red-500 px-4 py-2 rounded-lg hover:bg-red-600">No</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const startBtn = document.getElementById("startBtn");
+const startBtn = document.getElementById("startBtn");
         const popup = document.getElementById("popup");
         const popupText = document.getElementById("popupText");
         const yesBtn = document.getElementById("yesBtn");
@@ -76,6 +51,3 @@
         noBtn.addEventListener("click", () => {
             popup.classList.add("hidden");
         });
-    </script>
-</body>
-</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Interactive Glowing Surprise Box</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Cube 3D Styles */
+
+
+
+
+
+
+        .scene {
+            perspective: 1000px;
+            width: 100%;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .cube {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            transform-style: preserve-3d;
+            cursor: grab;
+            transition: transform 0.3s ease-out;
+        }
+
+        .face {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+            transition: transform 1s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        /* Cube Faces */
+        .front  { transform: translateZ(100px); background-image: url('img1.jpg'); }
+        .back   { transform: rotateY(180deg) translateZ(100px); background-image: url('./img10.jpg'); }
+        .left   { transform: rotateY(-90deg) translateZ(100px); background-image: url('./img12.jpg'); }
+        .right  { transform: rotateY(90deg) translateZ(100px); background-image: url('./img6.jpg'); }
+        .top    { transform: rotateX(90deg) translateZ(100px); background-image: url('./img5.jpg'); }
+        .bottom { transform: rotateX(-90deg) translateZ(100px); background-image: url('./omg9.jpg'); }
+
+        /* Glowing edges effect */
+        .holding .face {
+            border-color: rgba(0, 255, 255, 0.8);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
+        }
+
+        /* Open Animation */
+        .open .top { transform: rotateX(-120deg) translateZ(100px); }
+        .open .bottom { transform: rotateX(120deg) translateZ(100px); }
+        .open .left { transform: rotateY(-120deg) translateZ(100px); }
+        .open .right { transform: rotateY(120deg) translateZ(100px); }
+        .open .front {
+             transform: translateZ(150px) scale(0.8);
+             opacity: 0;
+            }
+        .open .back { transform: rotateY(180deg) translateZ(150px) scale(0.8); }
+
+
+
+
+
+        #startBtn {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    transition: transform 0.8s ease-in-out, opacity 0.8s ease-in-out;
+}
+
+/* When cube opens, button pops out */
+.open #startBtn {
+    transform: translate(-50%, -150px) scale(1);
+    opacity: 2;
+    z-index: 1000000000;
+    width: 204px;
+    margin-top: 100px;
+}
+
+
+
+
+
+
+
+        /* Popup Styling */
+        #popup {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-content {
+            background: white;
+            color: black;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 300px;
+            box-shadow: 0px 5px 15px rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-gray-900 to-gray-700 text-white flex flex-col justify-center items-center min-h-screen">
+
+    <h1 class="text-2xl md:text-3xl font-bold mb-4 text-center">Drag the Box to Rotate & Click for Reveal! 🎁</h1>
+
+    <div class="scene">
+        <div class="cube" id="cube">
+            <div class="face front"></div>
+            <div class="face back"></div>
+            <div class="face left"></div>
+            <div class="face right"></div>
+            <div class="face top"></div>
+            <div class="face bottom"></div>
+            <div class="card font-bold">
+                <button id="startBtn" class="bg-blue-500 px-6 py-3 rounded-lg text-lg font-bold hover:bg-blue-600">Are you sure you want to know?</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup -->
+    <div id="popup">
+        <div class="popup-content">
+            <p id="popupText" class="text-lg font-bold"></p>
+            <div class="mt-4 space-x-4">
+                <button id="yesBtn" class="bg-green-500 px-4 py-2 rounded-lg hover:bg-green-600">Yes</button>
+                <button id="noBtn" class="bg-red-500 px-4 py-2 rounded-lg hover:bg-red-600">No</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cube = document.getElementById('cube');
+        let isDragging = false, startX, startY, currentX = 0, currentY = 0;
+        let isOpen = false; 
+
+        // Dragging functionality
+        cube.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            cube.classList.add("holding");
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            let deltaX = e.clientX - startX;
+            let deltaY = e.clientY - startY;
+            currentX += deltaX * 0.5;
+            currentY -= deltaY * 0.5;
+            cube.style.transform = `rotateX(${currentY}deg) rotateY(${currentX}deg)`;
+            startX = e.clientX;
+            startY = e.clientY;
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            cube.classList.remove("holding");
+        });
+
+        // Click to open/close the box
+        cube.addEventListener('click', function() {
+            if (isDragging) return;
+            isOpen = !isOpen;
+            this.classList.toggle('open', isOpen);
+        });
+
+        // Popup functionality
+        const startBtn = document.getElementById("startBtn");
+        const popup = document.getElementById("popup");
+        const popupText = document.getElementById("popupText");
+        const yesBtn = document.getElementById("yesBtn");
+        const noBtn = document.getElementById("noBtn");
+
+        let step = 0;
+        const messages = [
+            "Are you sure you want to know?",
+            "Think again!",
+            "It should not affect our friendship!",
+            "Do you know what, it doesn't make me emotional anymore.",
+            "I can't explain this feeling.",
+            "It is too good.",
+            "I might be able to release myself only for you because I am not like others.",
+            "I know how to love unconditionally.",
+            "No matter how far you go, I am willing to fall in love with you again and again.",
+            "Love doesn’t ask for anything in return; give as much as you can.",
+            "But that doesn’t mean I will ever harm myself. If I’m not here, who will hold on to these feelings?",
+            "As Anupam Roy once said: 'Many births ago, in this very spring, I saw you for the first time.'",
+            "That’s why love teaches us to live, not to harm.",
+            "🌟 You are awesome! 🌟"
+        ];
+
+        startBtn.addEventListener("click", () => {
+            step = 0;
+            popupText.textContent = messages[step];
+            popup.style.display = "flex";
+        });
+
+        yesBtn.addEventListener("click", () => {
+            step++;
+            if (step < messages.length) {
+                popupText.textContent = messages[step];
+            } else {
+                popup.style.display = "none";
+            }
+        });
+
+        noBtn.addEventListener("click", () => {
+            popup.style.display = "none";
+        });
+    </script>
+
+</body>
+</html>
