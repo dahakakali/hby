@@ -147,41 +147,60 @@
     </div>
 
     <script>
-        const cube = document.getElementById('cube');
-        let isDragging = false, startX, startY, currentX = 0, currentY = 0;
-        let isOpen = false; 
+      const cube = document.getElementById('cube');
+let isDragging = false, startX, startY, currentX = 0, currentY = 0;
+let isOpen = false;
 
-        // Dragging functionality
-        cube.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            startX = e.clientX;
-            startY = e.clientY;
-            cube.classList.add("holding");
-        });
+// Common function to start drag
+function startDrag(x, y) {
+    isDragging = true;
+    startX = x;
+    startY = y;
+    cube.classList.add("holding");
+}
 
-        document.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            let deltaX = e.clientX - startX;
-            let deltaY = e.clientY - startY;
-            currentX += deltaX * 0.5;
-            currentY -= deltaY * 0.5;
-            cube.style.transform = `rotateX(${currentY}deg) rotateY(${currentX}deg)`;
-            startX = e.clientX;
-            startY = e.clientY;
-        });
+// Common function to handle dragging
+function dragMove(x, y) {
+    if (!isDragging) return;
+    let deltaX = x - startX;
+    let deltaY = y - startY;
+    currentX += deltaX * 0.5;
+    currentY -= deltaY * 0.5;
+    cube.style.transform = `rotateX(${currentY}deg) rotateY(${currentX}deg)`;
+    startX = x;
+    startY = y;
+}
 
-        document.addEventListener('mouseup', () => {
-            isDragging = false;
-            cube.classList.remove("holding");
-        });
+// Common function to end drag
+function endDrag() {
+    isDragging = false;
+    cube.classList.remove("holding");
+}
 
-        // Click to open/close the box
-        cube.addEventListener('click', function() {
-            if (isDragging) return;
-            isOpen = !isOpen;
-            this.classList.toggle('open', isOpen);
-        });
+// Mouse Events
+cube.addEventListener('mousedown', (e) => startDrag(e.clientX, e.clientY));
+document.addEventListener('mousemove', (e) => dragMove(e.clientX, e.clientY));
+document.addEventListener('mouseup', endDrag);
 
+// Touch Events (for Mobile)
+cube.addEventListener('touchstart', (e) => {
+    let touch = e.touches[0]; // Get the first touch
+    startDrag(touch.clientX, touch.clientY);
+});
+
+document.addEventListener('touchmove', (e) => {
+    let touch = e.touches[0];
+    dragMove(touch.clientX, touch.clientY);
+});
+
+document.addEventListener('touchend', endDrag);
+
+// Click to open/close the box
+cube.addEventListener('click', function() {
+    if (isDragging) return; // Prevent accidental opening when dragging
+    isOpen = !isOpen;
+    this.classList.toggle('open', isOpen);
+});
         // Popup functionality
         const startBtn = document.getElementById("startBtn");
         const popup = document.getElementById("popup");
