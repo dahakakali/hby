@@ -234,15 +234,26 @@ cube.addEventListener('click', function() {
 
         yesBtn.addEventListener("click", () => {
             step++;
-            if (step < messages.length) {
+            if (step < 3  ) {
                 popupText.textContent = messages[step];
-            } else {
-                popup.style.display = "none";
+            }
+            else if(step < messages.length - 1)
+            {
+                popupText.textContent = messages[step];
+                yesBtn.textContent ="ok then"
+                noBtn.classList.add("hidden");
+            
+
+            }
+            else {
+                popupText.innerHTML = `<span class='text-green-600'>${messages[step]}</span>`;
+                yesBtn.classList.add("hidden");
+                noBtn.textContent = "Close";
             }
         });
 
         noBtn.addEventListener("click", () => {
-            popup.style.display = "none";
+            popup.classList.add("hidden");
         });
     </script>
 
